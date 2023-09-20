@@ -1,0 +1,73 @@
+{
+    "name": "ActionMap",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "5a72ca3a-7130-4404-8f24-e19cefb4f5cf",
+            "actions": [
+                {
+                    "name": "Fly",
+                    "type": "Button",
+                    "id": "eac5acf1-9ff1-4d7a-9822-34ab5576966d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "5f313d35-e64f-4d6b-8cf2-17443d8b14a4",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fly",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a6675a80-3aa1-46c7-8bdb-76233fd58599",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Fly",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "UI",
+            "id": "168044f1-9971-43e1-ae54-40a128ac80fe",
+            "actions": [
+                {
+                    "name": "Menu",
+                    "type": "Button",
+                    "id": "583413f9-c0dc-4293-b89b-cc1df595bb59",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "62efd86b-97c2-4efe-840f-79f2c5b4f5cf",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Menu",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
