@@ -6,64 +6,47 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.InputSystem;
 
-public class UIMenu : DestoyedEventObj
+public class UIMenu : MonoBehaviour
 {
     [SerializeField] private GameObject _panelMenu;
     [SerializeField] private Sprite _soundOff;
     [SerializeField] private Sprite _soundON;
     [SerializeField] private Button _btnSound;
     [SerializeField] private Button _btnSFX;
-    [SerializeField] private AudioMixer _aMixer;
     [SerializeField] private TMP_Dropdown _drDownDifficulty;
-    [SerializeField] private AudioManager _aMng;
     private ActionMap _uiControl;
 
     private bool _isSoundOff, _isSFXoff;
 
     public void Init()
     {
-        _uiControl = new ActionMap();
-        Bind();
+        if (_uiControl == null)
+        {
+            _uiControl = new ActionMap();
+            Bind();
+        }
         _drDownDifficulty.value = (int)GameManager.Singltone.CurrentDifficulty;
     }
     private void Bind()
     {
         _uiControl.UI.Enable();
         _uiControl.UI.Menu.started += CallMenuPause;
-    }
-    private void Untying()
-    {
-        _uiControl.Disable();
-        _uiControl.UI.Menu.started -= CallMenuPause;
-    }
-    protected override void SetEventActionData()
-    {
-        _eventAction = new List<EventActionData>();
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventGamePause, SetActiveMenu));
-    }
-    protected override void OnDestroy()
-    {
-        Untying();
-        base.OnDestroy();
-    }
-    protected override void Start()
-    {
-        Init();
-        base.Start();
+        GameManager.Singltone.GameEvents.EventGamePause.Subscribe(SetActiveMenu);
     }
     private void CallMenuPause(InputAction.CallbackContext obj)
     {
         MenuPause();
     }
+    private void MenuPause()
+    {
+        if (!GameManager.Singltone.LinksData.Player.IsCrush)
+            GameManager.Singltone.GameEvents.EventGamePause.OnEvent();
+    }
     private void SetActiveMenu()
     {
         GameManager.Singltone.SetGamePause(_panelMenu);
     }
-    private void MenuPause()
-    {
-        if(!Player.Singltone.IsCrush)
-            GameManager.Singltone.GameEvents.EventGamePause.OnEvent();
-    }
+
     public void BtnPlayGame() 
     {
         MenuPause();

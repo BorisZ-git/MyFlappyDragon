@@ -2,25 +2,29 @@ using UnityEngine;
 
 public class LevelPreparing
 {
-    public void FillScene()
+    public LinksData FillScene()
     {
-        if (!Player.Singltone && GameManager.Singltone?.PlayerPrefab && GameManager.Singltone?.PlayerSpawn)
-        {
-            GameManager.Singltone.Player = Object.Instantiate(GameManager.Singltone.PlayerPrefab, GameManager.Singltone.PlayerSpawn.position, Quaternion.identity).GetComponent<Player>();
-            GameManager.Singltone.Player.Init();
-        }
-        else if (Player.Singltone) // && _playerSpawn =>
-        {
-            Player.Singltone.transform.position = GameManager.Singltone?.PlayerSpawn != null ? GameManager.Singltone.PlayerSpawn.position : new Vector3(-1.5f, 0, 0);
-        }
-        else
-        {
-            Debug.Log("Check Settings in GameManager Prefabs");
-        }
-
+        LinksData data = new LinksData
+            (
+            LoadPlayer(),
+            LoadCanvas(),
+            LoadAudioMng()
+            );        
+        return data;
     }
-    public void LoadGame()
+    private Player LoadPlayer()
     {
-        Player.Singltone.Init();
+        if (GameManager.Singltone.PrefabsHash.PlayerPrefab == null || GameManager.Singltone.PrefabsHash.PlayerSpawn == null) Debug.Log("Prefab null");
+        return Object.Instantiate(GameManager.Singltone.PrefabsHash.PlayerPrefab, GameManager.Singltone.PrefabsHash.PlayerSpawn, Quaternion.identity).GetComponent<Player>();
+    }
+    private UIManager LoadCanvas()
+    {
+        if (GameManager.Singltone.PrefabsHash.CanvasPrefab == null) Debug.Log("Prefab null");
+        return Object.Instantiate(GameManager.Singltone.PrefabsHash.CanvasPrefab).GetComponent<UIManager>();
+    }
+    private GameObject LoadAudioMng()
+    {
+        if (GameManager.Singltone.PrefabsHash.AudioMngPrefab == null) Debug.Log("Prefab null");
+        return Object.Instantiate(GameManager.Singltone.PrefabsHash.AudioMngPrefab);
     }
 }

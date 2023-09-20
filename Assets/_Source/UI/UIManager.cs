@@ -1,39 +1,35 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+
 [RequireComponent(typeof(UIScore))] [RequireComponent(typeof(UIMenu))]
-public class UIManager : DestoyedEventObj
+public sealed class UIManager : MonoBehaviour
 {
-    [SerializeField] private UIScore _uiScore;
     [SerializeField] private Image _darkEffect;
-
+    private UIScore _uiScore;
+    private UIMenu _uiMenu;
+    private static bool _isInit;
     public UIScore UIScore { get => _uiScore; }
-    // Логично канвас запихнуть в префаб, организовать поле с этим префабом в gamemanger и через него создавать этот объект на сцене, добавив проверку на первый запуск и донтдестрой для объекта
-    // по логике это плюс к оптимизации при перезапуске уровня и логика входного скрипта gamemanager выглядит более целостной
-    //public void Init()
-    //{
-    //    _uiScore = GetComponent<UIScore>();
-    //    _uiScore.Init();
-    //    DontDestroyOnLoad(this);
-    //}
+    public UIMenu UIMenu { get => _uiMenu; }
 
-    public void SetDarkEffect()
+    public void Init()
+    {
+        if (_darkEffect.gameObject.activeInHierarchy) SetDarkEffect();
+        _uiScore = GetComponent<UIScore>();
+        _uiMenu = GetComponent<UIMenu>();
+        _uiScore.Init();
+        _uiMenu.Init();
+        if (_isInit) return;
+        Bind();
+        _isInit = true;
+        DontDestroyOnLoad(this);
+    }
+    private void Bind()
+    {
+        GameManager.Singltone.GameEvents.EventCrush.Subscribe(SetDarkEffect);
+    }
+    private void SetDarkEffect()
     {
         if(_darkEffect != null)
-            _darkEffect.gameObject.SetActive(true);
+            _darkEffect.gameObject.SetActive(!_darkEffect.gameObject.activeInHierarchy);
     }
-
-    protected override void SetEventActionData()
-    {
-        _uiScore = GetComponent<UIScore>();
-        _uiScore.Init();
-        _eventAction = new List<EventActionData>();
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventCrush, SetDarkEffect));
-    }
-    //IEnumerator SetEffectCoroutineTest()
-    //{
-    //    _darkEffect.color.a = ..
-    //    yield return new WaitForSeconds(2f);
-    //}
 }

@@ -3,13 +3,13 @@ using UnityEngine;
 public class Obstacle : MonoBehaviour
 {
     [Header("Respawn Logic")]
-    [SerializeField] private Transform _spawnPoint;
     [SerializeField] private bool _isRandomYOnRespawn;
     [SerializeField][Tooltip("Max Y value for offset on spawn")][Range(1,4.2f)] private float _maxYOffset;
     [Header("Trigger Layers")]
     [SerializeField] private LayerMask _playerLayer;
     [SerializeField] private LayerMask _respawnLayer;
     private Vector3 _offsetY = new Vector3(0,0,0);
+
 
     private void Update()
     {
@@ -28,7 +28,7 @@ public class Obstacle : MonoBehaviour
         else if(Supporting.Utils.IsInLayer(collision.gameObject.layer, _respawnLayer))
         {
             if (_isRandomYOnRespawn) RandomYPos();
-            else transform.position = _spawnPoint.position;
+            else transform.position = GameManager.Singltone.PrefabsHash.ObstacleSpawn;
         }
     }
     private void RandomYPos()
@@ -36,11 +36,11 @@ public class Obstacle : MonoBehaviour
         _offsetY.y = Random.Range(0, _maxYOffset);
         if(transform.position.y <= 0)
         {
-            transform.position = _spawnPoint.position + _offsetY;
+            transform.position = GameManager.Singltone.PrefabsHash.ObstacleSpawn + _offsetY;
         }
         else
         {
-            transform.position = _spawnPoint.position - _offsetY;
+            transform.position = GameManager.Singltone.PrefabsHash.ObstacleSpawn - _offsetY;
         }
     }
 }

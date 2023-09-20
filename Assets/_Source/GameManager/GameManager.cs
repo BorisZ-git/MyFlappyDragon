@@ -3,6 +3,9 @@ using UnityEngine;
 /*
  * 1. Переписать Канвас под неуничтожимый объект
  * а. Переписать логику скриптов на канвасе под Init() - UIManager,UIMenu,
+ * Задать проверку на инициализированные компоненты и подписки в компонентах GameManagera _isInit;
+ * б. UIMENU теряет ссылки на audioMng так как отдельный объект
+ * в. Obstacle 31 строка потеря объекта spawnPoint, так как сериализован. Ссылка через GameManager
  * 2. Перебросить логику паузы по разным скриптам
  * 3. Создать UIEventHandler
  * 4. Перебросить логику Сложности на отдельный скрипт
@@ -12,33 +15,27 @@ using UnityEngine;
  * 8. Перекинуть логику инпутов на InputManager?
  */
 #endregion
-public class GameManager : MonoBehaviour
+[RequireComponent(typeof(PrefabsHash))]
+public sealed class GameManager : MonoBehaviour
 {
     public static GameManager Singltone;
 
-    [Header("Prefabs")]
-    [SerializeField] private GameObject _playerPrefab;
-    [SerializeField] private GameObject _obstaclePrefab;
-    [Header("Spawn Points")]
-    [SerializeField] private Transform _playerSpawn;
-    [SerializeField] private Transform _obstacleSpawn;
     [Header("Game Settings")]
     [SerializeField][Tooltip("How fast obstacles moving")][Range(1,4)] private float _gameSpeed;
     [SerializeField] private float _timeToRestart;
 
-    private Player _player;
-    private LevelPreparing _levelPreparing;
-    private GameScore _gameScore;
-    private GameEventHandler _gameEventHandler;
-    private GameOver _gameOver;
+    private static LevelPreparing _levelPreparing;
+    private static GameScore _gameScore;
+    private static GameOver _gameOver;
+    private static GameEventHandler _gameEventHandler;
+    private static LinksData _linksData;
+    private static PrefabsHash _prefabsHash;
+
     private static bool _isFirstRun = true;
     private static Difficulty _currentDifficulty;
 
-    public GameObject PlayerPrefab { get => _playerPrefab; }
-    public GameObject ObstaclePrefab { get => _obstaclePrefab; }
-    public Transform PlayerSpawn { get => _playerSpawn; }
-    public Transform ObstacleSpawn { get => _obstacleSpawn; }
-    public Player Player { get => _player; set => _player = value; }
+    public LinksData LinksData { get => _linksData; }
+    public PrefabsHash PrefabsHash { get => _prefabsHash; }
     public GameScore GameScore { get => _gameScore; }
     public GameEventHandler GameEvents { get => _gameEventHandler; }
     public float GameSpeed { get => _gameSpeed; }
@@ -47,27 +44,35 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         CheckSingltone();
-        if (_levelPreparing == null) _levelPreparing = new LevelPreparing();
-        if (_gameEventHandler == null) _gameEventHandler = new GameEventHandler();
-        if (_gameScore == null) _gameScore = new GameScore();
-        if (_gameOver == null) _gameOver = new GameOver(_timeToRestart);
-        _levelPreparing.FillScene();
+        if (_isFirstRun)
+            InitManager();
+        else
+            ResetGame();
         LoadGame();
     }
     private void LoadGame()
     {
-        if (_isFirstRun)
-        {
-            Player.Singltone.Init();
-            //_uiMng.Init(); => look in UIManager describe
-            _currentDifficulty = Difficulty.Normal;
-            ChangeDifficulty(_currentDifficulty);
-            _isFirstRun = false;
-        }
-        else
-        {
-            Player.Singltone.ResetPlayerForNewGame();
-        }
+        LinksData.UIMng.Init();
+
+    }
+    private void InitManager()
+    {
+        _prefabsHash = GetComponent<PrefabsHash>();
+        _levelPreparing = new LevelPreparing();
+        _gameEventHandler = new GameEventHandler();
+        _gameScore = new GameScore();
+        _gameOver = new GameOver(_timeToRestart);
+        _prefabsHash.Init();
+        _linksData = _levelPreparing.FillScene();
+        LinksData.Player.Init();
+        _currentDifficulty = Difficulty.Normal;
+        ChangeDifficulty(_currentDifficulty);
+        _isFirstRun = false;
+    }
+    private void ResetGame()
+    {
+        LinksData.Player.transform.position = PrefabsHash.PlayerSpawn;
+        LinksData.Player.ResetPlayerForNewGame();
     }
     public void PlayerCrush()
     {
