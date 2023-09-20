@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     public Player Player { get => _player; set => _player = value; }
     public GameScore GameScore { get => _gameScore; set => _gameScore = value; }
     public GameEventHandler GameEvents { get => _gameEventHandler; }
-
+    //init
     public float GameSpeed { get => _gameSpeed; }
 
     private void Awake()
