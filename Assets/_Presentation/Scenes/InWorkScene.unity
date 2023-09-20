@@ -2418,6 +2418,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: adabcb7a3794d2d4288dd2729fcaa5db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _aMixer: {fileID: 24100000, guid: 0bb4439d2613b74479b47d9537049b1a, type: 2}
+  _pauseSnapshot: {fileID: -261381982444851748, guid: 0bb4439d2613b74479b47d9537049b1a, type: 2}
+  _unPauseSnapshot: {fileID: 24500006, guid: 0bb4439d2613b74479b47d9537049b1a, type: 2}
+  _timeToReachSnapshot: 0.01
   _fly: {fileID: 8300000, guid: 1202e823b82ccb9478b98e49de654901, type: 3}
   _crush: {fileID: 8300000, guid: 1f25576366a1eed43a4abef93498127e, type: 3}
   _passObstacle: {fileID: 8300000, guid: 39741a4705b359444aaa3847538f59bb, type: 3}
@@ -2680,7 +2684,7 @@ GameObject:
   - component: {fileID: 866500613}
   - component: {fileID: 866500614}
   m_Layer: 5
-  m_Name: Slider_Sound
+  m_Name: Slider_Music
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2755,10 +2759,22 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1163533023}
+        m_TargetAssemblyTypeName: MusicMng, Assembly-CSharp
+        m_MethodName: SetMusicVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &915860977
 GameObject:
   m_ObjectHideFlags: 0
@@ -3352,7 +3368,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1660169159}
         m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-        m_MethodName: PlayGame
+        m_MethodName: BtnPlayGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4073,7 +4089,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1660169159}
         m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-        m_MethodName: Exit
+        m_MethodName: BtnExit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4206,7 +4222,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1660169159}
         m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-        m_MethodName: SFXTurn
+        m_MethodName: BtnSFXTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4907,6 +4923,7 @@ MonoBehaviour:
   _btnSFX: {fileID: 1505081501}
   _aMixer: {fileID: 0}
   _drDownDifficulty: {fileID: 1710408498}
+  _aMng: {fileID: 0}
 --- !u!1 &1675353820
 GameObject:
   m_ObjectHideFlags: 0
@@ -5371,10 +5388,22 @@ MonoBehaviour:
   m_MinValue: 0
   m_MaxValue: 1
   m_WholeNumbers: 0
-  m_Value: 0
+  m_Value: 1
   m_OnValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 819683774}
+        m_TargetAssemblyTypeName: AudioManager, Assembly-CSharp
+        m_MethodName: SetSFXVolume
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1871001548
 GameObject:
   m_ObjectHideFlags: 0
@@ -5388,7 +5417,7 @@ GameObject:
   - component: {fileID: 1871001551}
   - component: {fileID: 1871001550}
   m_Layer: 5
-  m_Name: Button_Sound
+  m_Name: Button_Music
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5460,7 +5489,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1660169159}
         m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-        m_MethodName: SoundTurn
+        m_MethodName: BtnSoundTurn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -12,7 +12,7 @@ public class UIScore : DestoyedEventObj
     public void Init()
     {
         UpdateUI();
-        GameManager.Singltone.GameEvents?.EventPassObstacle?.Subscribe(UpdateUI);
+        //GameManager.Singltone.GameEvents?.EventPassObstacle?.Subscribe(UpdateUI);
     }
     private void UpdateUI()
     {

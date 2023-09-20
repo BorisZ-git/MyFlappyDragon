@@ -9,6 +9,7 @@ public class GameScore
     private int _bestScore;
     private const string _hashPathScoreFile = "Assets/Supporting/Score/Score.txt";
     public int BestScore { get => _bestScore; }
+    public int Points { get; set; }
     public GameScore()
     {
         ReadBestScore();
@@ -17,7 +18,7 @@ public class GameScore
     }
     private void AddScore()
     {
-        _score += 10;
+        _score += Points;
         SetNewBestScore();
     }
     private bool SetNewBestScore()

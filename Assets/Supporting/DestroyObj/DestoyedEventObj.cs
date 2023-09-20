@@ -1,7 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Linq;
 
 /// <summary>
 /// For not save objects having actions that executes on event
@@ -46,7 +44,6 @@ public abstract class DestoyedEventObj : MonoBehaviour
                 else
                     e.Discribe(item.Action);
             }
-
         }
     }
 }

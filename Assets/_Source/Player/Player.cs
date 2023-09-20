@@ -27,6 +27,7 @@ public class Player : MonoBehaviour
             _playerMove.Init();
             _playerAnim.Init();
             GameManager.Singltone?.GameEvents?.EventCrush?.Subscribe(Crush); // возможно лучше сделать из другого места
+            _isPlayerOn = true;
         }
     }
     public void Crush()
@@ -45,11 +46,11 @@ public class Player : MonoBehaviour
         _playerAnim.ResetCrushAnim();
         ResetRBForce();
     }
-    public bool PlayerOff()
+    public void PlayerOff()
     {
-        _playerControl.Untying();
-        
-        return _isPlayerOn = !_isPlayerOn;
+        _isPlayerOn = !_isPlayerOn;
+        if (_isPlayerOn) _playerControl.Bind();
+        else _playerControl.Untying();        
     }
     private void ResetRBForce()
     {

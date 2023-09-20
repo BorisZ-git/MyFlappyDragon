@@ -4,8 +4,9 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
 
-public class UIMenu : MonoBehaviour
+public class UIMenu : DestoyedEventObj
 {
     [SerializeField] private GameObject _panelMenu;
     [SerializeField] private Sprite _soundOff;
@@ -14,26 +15,58 @@ public class UIMenu : MonoBehaviour
     [SerializeField] private Button _btnSFX;
     [SerializeField] private AudioMixer _aMixer;
     [SerializeField] private TMP_Dropdown _drDownDifficulty;
+    [SerializeField] private AudioManager _aMng;
+    private ActionMap _uiControl;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            GameManager.Singltone.SetGamePause(_panelMenu);
-        }
-    }
     private bool _isSoundOff, _isSFXoff;
-    private void Start()
-    {
-        GameManager.Singltone.SetGamePause(_panelMenu);
-    }
+
     public void Init()
     {
-
+        _uiControl = new ActionMap();
+        Bind();
+        _drDownDifficulty.value = (int)GameManager.Singltone.CurrentDifficulty;
     }
-    public void BtnPlayGame()
+    private void Bind()
+    {
+        _uiControl.UI.Enable();
+        _uiControl.UI.Menu.started += CallMenuPause;
+    }
+    private void Untying()
+    {
+        _uiControl.Disable();
+        _uiControl.UI.Menu.started -= CallMenuPause;
+    }
+    protected override void SetEventActionData()
+    {
+        _eventAction = new List<EventActionData>();
+        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventGamePause, SetActiveMenu));
+    }
+    protected override void OnDestroy()
+    {
+        Untying();
+        base.OnDestroy();
+    }
+    protected override void Start()
+    {
+        Init();
+        base.Start();
+    }
+    private void CallMenuPause(InputAction.CallbackContext obj)
+    {
+        MenuPause();
+    }
+    private void SetActiveMenu()
     {
         GameManager.Singltone.SetGamePause(_panelMenu);
+    }
+    private void MenuPause()
+    {
+        if(!Player.Singltone.IsCrush)
+            GameManager.Singltone.GameEvents.EventGamePause.OnEvent();
+    }
+    public void BtnPlayGame() 
+    {
+        MenuPause();
     }
     public void BtnSoundTurn()
     {
@@ -41,21 +74,12 @@ public class UIMenu : MonoBehaviour
         if (_isSoundOff)
         {
             _btnSound.image.sprite = _soundOff;
-
-            //AudioManager
-            //_aMixer.TransitionToSnapshots()
-            //AudioSource audioSource = new AudioSource();
-            //audioSource.volume = 0;
         }
         else
         {
             _btnSound.image.sprite = _soundON;
-
-            //AudioManager
-            //_aMixer.TransitionToSnapshots()
-            //AudioSource audioSource = new AudioSource();
-            //audioSource.volume = private float _ currentVolume;
         }
+        GameManager.Singltone.GameEvents.EventMuteSound.OnEvent();
     }
     public void BtnSFXTurn()
     {
@@ -63,43 +87,29 @@ public class UIMenu : MonoBehaviour
         if (_isSFXoff)
         {
             _btnSFX.image.color = Color.clear;
-            //AudioManager
-            //_aMixer.TransitionToSnapshots()
-            //AudioSource audioSource = new AudioSource();
-            //audioSource.volume = 0;
         }
         else
         {
             _btnSFX.image.color = Color.white;
-            //AudioManager
-            //_aMixer.TransitionToSnapshots()
-            //AudioSource audioSource = new AudioSource();
-            //audioSource.volume = private float _ currentVolume;
         }
+        GameManager.Singltone.GameEvents.EventMuteSFX.OnEvent();
     }
     public void ChangeDifficulty(int value)
     {
-        print($"Easy: {value == (int)Difficulty.Easy}");
-        print($"Hard: {value == (int)Difficulty.Hard}");
-        print($"Normal: {value == (int)Difficulty.Normal}");
-        //if(value == (int)Difficulty.Easy)
-        //{
-        //    GameManager.Singltone.ChangeSpeed(1.5f);
-        //}
-        //switch (value)
-        //{
-        //    case Difficulty.Easy:
-        //        ChangeSpeed(1.5f);
-        //        break;
-        //    case Difficulty.Normal:
-        //        ChangeSpeed(2.5f);
-        //        break;
-        //    case Difficulty.Hard:
-        //        ChangeSpeed(3.5f);
-        //        break;
-        //    default:
-        //        break;
-        //}
+        switch (value)
+        {
+            case (int)Difficulty.Easy:
+                GameManager.Singltone.ChangeDifficulty(Difficulty.Easy);
+                break;
+            case (int)Difficulty.Normal:
+                GameManager.Singltone.ChangeDifficulty(Difficulty.Normal);
+                break;
+            case (int)Difficulty.Hard:
+                GameManager.Singltone.ChangeDifficulty(Difficulty.Hard);
+                break;
+            default:
+                break;
+        }
     }
     public void BtnExit()
     {
