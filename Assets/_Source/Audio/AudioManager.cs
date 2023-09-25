@@ -1,14 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Linq;
 using UnityEngine.Audio;
 
 [RequireComponent(typeof(AudioSource))]
-public class AudioManager : DestoyedEventObj
+public class AudioManager : MonoBehaviour
 {
-    [SerializeField] private AudioMixer _aMixer;
+    [Header("Mixer Snapshots")]
     [SerializeField] private AudioMixerSnapshot _pauseSnapshot;
     [SerializeField] private AudioMixerSnapshot _unPauseSnapshot;
     [SerializeField] private float _timeToReachSnapshot = 0.001f;
@@ -19,22 +15,34 @@ public class AudioManager : DestoyedEventObj
     [SerializeField] private AudioClip _passObstacle;
 
     private AudioSource _as;
+    private MusicMng _musicMng;
     private bool _isPause;
     private float _currentVolume = 1f;
     private bool _mute;
 
-    private void Awake()
+    public void Init()
     {
         _as = GetComponent<AudioSource>();
+        InitMusicMng();
+        EventSubscribe();
+        DontDestroyOnLoad(this);
     }
-    protected override void SetEventActionData()
+    private void EventSubscribe()
     {
-        _eventAction = new List<EventActionData>();
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventCrush, PlayACCrush));
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventFly, PlayACFly));
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventPassObstacle, PlayACPassObstacle));
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventGamePause, SetPauseSnapshot));
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventMuteSFX, MuteSFX));
+        GameManager.Singltone.GameEvents.EventCrush.Subscribe(PlayACCrush);
+        GameManager.Singltone.GameEvents.EventFly.Subscribe(PlayACFly);
+        GameManager.Singltone.GameEvents.EventPassObstacle.Subscribe(PlayACPassObstacle);
+        GameManager.Singltone.GameEvents.EventGamePause.Subscribe(SetPauseSnapshot);
+        GameManager.Singltone.UIEvents.EventMuteSFX.Subscribe(MuteSFX);
+        GameManager.Singltone.UIEvents.EventChangeSFXVolume.Subscribe(SetSFXVolume);
+    }
+    private void InitMusicMng()
+    {
+        _musicMng = GetComponentInChildren<MusicMng>();
+        if(_musicMng != null)
+        {
+            _musicMng.Init();
+        }
     }
     private void PlayACPassObstacle()
     {

@@ -6,13 +6,11 @@ public class UIScore : MonoBehaviour
     [Header("Links")]
     [SerializeField] private TMP_Text _score;
     [SerializeField] private TMP_Text _bestScore;
-    private bool _isInit;
     public void Init()
     {
         UpdateUI();
-        if (_isInit) return;
+        GameManager.Singltone.GameEvents.EventResetGame.Subscribe(UpdateUI);
         GameManager.Singltone.GameEvents.EventPassObstacle.Subscribe(UpdateUI);
-        _isInit = true;
     }
     private void UpdateUI()
     {

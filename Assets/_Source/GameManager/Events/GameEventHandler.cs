@@ -2,46 +2,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public sealed class GameEventHandler
+public sealed class GameEventHandler : GeneralEventHandler
 {
-    private PassObstacleEvent _eventPassObstacle;
-    private CrushEvent _eventCrush;
+    private GeneralEvent _eventPassObstacle;
+    private GeneralEvent _eventCrush;
     private GeneralEvent _eventFly;
     private GeneralEvent _eventGamePause;
-    private GeneralEvent _eventMuteSound;
-    private GeneralEvent _eventMuteSFX;
+    private GeneralEvent _eventResetGame;
 
-
-    private List<GeneralEvent> _events;
-    public PassObstacleEvent EventPassObstacle { get => _eventPassObstacle; }
-    public CrushEvent EventCrush { get => _eventCrush; }
+    public GeneralEvent EventPassObstacle { get => _eventPassObstacle; }
+    public GeneralEvent EventCrush { get => _eventCrush; }
     public GeneralEvent EventFly { get => _eventFly; }
     public GeneralEvent EventGamePause { get => _eventGamePause; }
-    public GeneralEvent EventMuteSound { get => _eventMuteSound; }
-    public GeneralEvent EventMuteSFX { get => _eventMuteSFX; }
+    /// <summary>
+    /// Event that run on Restart Lvl(After first run of game)
+    /// </summary>
+    public GeneralEvent EventResetGame { get => _eventResetGame; }
 
-    public List<GeneralEvent> Events { get => _events; }
-
-    public GameEventHandler()
+    protected override void GenerateEvents()
     {
-        _eventPassObstacle = new PassObstacleEvent();
-        _eventCrush = new CrushEvent();
+        _eventPassObstacle = new GeneralEvent();
+        _eventCrush = new GeneralEvent();
         _eventFly = new GeneralEvent();
         _eventGamePause = new GeneralEvent();
-        _eventMuteSound = new GeneralEvent();
-        _eventMuteSFX = new GeneralEvent();
-        SetEventsList();
+        _eventResetGame = new GeneralEvent();
     }
-    private void SetEventsList()
+    protected override void SetEventsList()
     {
-        if(_events == null) _events = new List<GeneralEvent>();
-        else _events.Clear();
-
+        base.SetEventsList();
         _events.Add(_eventPassObstacle);
         _events.Add(_eventCrush);
         _events.Add(_eventFly);
         _events.Add(_eventGamePause);
-        _events.Add(_eventMuteSound);
-        _events.Add(_eventMuteSFX);
+        _events.Add(_eventResetGame);
     }
 }

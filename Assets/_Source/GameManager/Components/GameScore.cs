@@ -15,6 +15,8 @@ public class GameScore
         ReadBestScore();
         GameManager.Singltone.GameEvents.EventPassObstacle.Subscribe(AddScore);
         GameManager.Singltone.GameEvents.EventCrush.Subscribe(WriteScore);
+        GameManager.Singltone.UIEvents.EventExitGame.Subscribe(WriteScore);
+        GameManager.Singltone.GameEvents.EventResetGame.Subscribe(ResetScore);
     }
     private void AddScore()
     {

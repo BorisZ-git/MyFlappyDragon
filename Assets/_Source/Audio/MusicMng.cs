@@ -1,26 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
-public sealed class MusicMng : DestoyedEventObj
+public sealed class MusicMng : MonoBehaviour
 {
     private AudioSource _as;
     private float _currentVolume = 1f;
     private bool _mute;
-    private void Awake()
-    {
-        _as = GetComponent<AudioSource>();
-    }
+
     private void StopMusic()
     {
         _as.Stop();
     }
-    protected override void SetEventActionData()
+    private void PlayMusic()
     {
-        _eventAction = new List<EventActionData>();
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventCrush, StopMusic));
-        _eventAction.Add(new EventActionData(GameManager.Singltone.GameEvents.EventMuteSound, MuteMusic));
+        _as.Play();
+    }
+    public void Init()
+    {
+        _as = GetComponent<AudioSource>();
+        GameManager.Singltone.GameEvents.EventCrush.Subscribe(StopMusic);
+        GameManager.Singltone.GameEvents.EventResetGame.Subscribe(PlayMusic);
+        GameManager.Singltone.UIEvents.EventMuteMusic.Subscribe(MuteMusic);
+        GameManager.Singltone.UIEvents.EventChangeMusicVolume.Subscribe(SetMusicVolume);
     }
     private void MuteMusic()
     {

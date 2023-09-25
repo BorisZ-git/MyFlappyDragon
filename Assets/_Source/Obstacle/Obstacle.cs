@@ -28,7 +28,7 @@ public class Obstacle : MonoBehaviour
         else if(Supporting.Utils.IsInLayer(collision.gameObject.layer, _respawnLayer))
         {
             if (_isRandomYOnRespawn) RandomYPos();
-            else transform.position = GameManager.Singltone.PrefabsHash.ObstacleSpawn;
+            else transform.position = GameManager.Singltone.LinksData.ObstacleSpawn;            
         }
     }
     private void RandomYPos()
@@ -36,11 +36,11 @@ public class Obstacle : MonoBehaviour
         _offsetY.y = Random.Range(0, _maxYOffset);
         if(transform.position.y <= 0)
         {
-            transform.position = GameManager.Singltone.PrefabsHash.ObstacleSpawn + _offsetY;
+            transform.position = GameManager.Singltone.LinksData.ObstacleSpawn + _offsetY;
         }
         else
         {
-            transform.position = GameManager.Singltone.PrefabsHash.ObstacleSpawn - _offsetY;
+            transform.position = GameManager.Singltone.LinksData.ObstacleSpawn - _offsetY;
         }
     }
 }

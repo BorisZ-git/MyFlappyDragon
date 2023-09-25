@@ -6,17 +6,14 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private float _flyForce = 5f;
-    //private Player _player;
-    //public void Init(Player player)
-    //{
-    //    _player = player;
-    //}
-    public void Init()
+    private Player _player;
+    public void Init(Player player)
     {
+        _player = player;
         GameManager.Singltone.GameEvents.EventFly.Subscribe(FlyUp);
     }
-    public void FlyUp()
+    private void FlyUp()
     {
-        Player.Singltone.PlayerRB.AddForce(Vector2.up * _flyForce, ForceMode2D.Impulse);
+        _player.PlayerRB.AddForce(Vector2.up * _flyForce, ForceMode2D.Impulse);
     }
 }

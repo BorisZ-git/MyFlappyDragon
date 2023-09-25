@@ -14,11 +14,8 @@ public sealed class GameOver
     }
     public IEnumerator RestarLvl()
     {
-        float temp = GameManager.Singltone.GameSpeed;
         GameManager.Singltone.ChangeSpeed(0);
-        yield return new WaitForSeconds(_timeToRestart);
-        GameManager.Singltone.GameScore.ResetScore();
-        GameManager.Singltone.ChangeSpeed(temp);        
+        yield return new WaitForSeconds(_timeToRestart);     
         RestartCurrentLvl();
     }
 }
